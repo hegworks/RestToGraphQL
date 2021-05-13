@@ -1,4 +1,4 @@
-# RestToGraphql
+# RestToGraphQL
 
 ## Introduction
 This project aims to replace *RESTful api* with *GraphqQL* in a codebase consisting of:
