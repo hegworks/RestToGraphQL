@@ -1,0 +1,25 @@
+#general
+*.class
+*.log
+
+# bloop and metals
+.bloop
+.bsp
+.metals
+
+# vs code
+.vscode
+
+# sbt
+bin/
+project/
+target/
+build/
+
+# Play Framework
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
