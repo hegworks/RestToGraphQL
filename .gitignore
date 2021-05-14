@@ -15,3 +15,11 @@ bin/
 project/
 target/
 build/
+
+# Play Framework
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
