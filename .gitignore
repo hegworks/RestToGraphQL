@@ -1,11 +1,13 @@
 #general
 *.class
 *.log
+conf/application.conf
 
 # bloop and metals
 .bloop
 .bsp
 .metals
+.scalafmt.conf
 
 # vs code
 .vscode
@@ -23,3 +25,4 @@ build/
 /.project
 /.settings
 /RUNNING_PID
+.g8
