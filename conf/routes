@@ -4,10 +4,15 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.AppController.index()
+GET			/						controllers.AppController.index()
 
-GET		/all						controllers.TheController.getAll
-GET		/add/:num1/:num2			controllers.TheController.add(num1: Int, num2: Int)
+# GET		/all					controllers.TheController.getAll
+# GET		/add/:num1/:num2		controllers.TheController.add(num1: Int, num2: Int)
+GET			/movies					controllers.TheModelController.findAll()
+GET			/movies/:id				controllers.TheModelController.findOne(id: String)
+POST		/movies					controllers.TheModelController.create()
+PUT			/movies/:id				controllers.TheModelController.update(id: String)
+DELETE		/movies/:id				controllers.TheModelController.delete(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

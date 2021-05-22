@@ -1,9 +1,113 @@
 package controllers
 
+import javax.inject._
+import play.api.mvc._
+import repositories.TheModelRepository
 
-/* 
-* without mongodb
-*/
+import scala.concurrent.ExecutionContext
+
+import reactivemongo.bson.BSONObjectID
+import play.api.libs.json.{Json, __}
+import scala.util.{Failure, Success}
+import scala.concurrent.{ExecutionContext, Future}
+
+import models.TheModel
+import play.api.libs.json.JsValue
+
+/**
+  * create the endpoints to expose the actions for the theModels repository.
+  *
+  * @param executionContext
+  * @param theModelRepository
+  * @param controllerComponents
+  */
+@Singleton
+class TheModelController @Inject()(
+                                 implicit executionContext: ExecutionContext,
+                                 val theModelRepository: TheModelRepository,
+                                 val controllerComponents: ControllerComponents)
+  extends BaseController {
+  // actions:
+
+  /**
+	* the two endpoints responsible of reading data:
+	*
+	* this will return the theModel list
+	* 
+	* @return
+	*/
+  def findAll():Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+  theModelRepository.findAll().map {
+    theModels => Ok(Json.toJson(theModels))
+  }
+}
+
+/**
+  * this will parse the given id and return the associated theModel if it’s found.
+  *
+  * @param id
+  * @return
+  */
+def findOne(id:String):Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+  val objectIdTryResult = BSONObjectID.parse(id)
+  objectIdTryResult match {
+    case Success(objectId) => theModelRepository.findOne(objectId).map {
+      theModel => Ok(Json.toJson(theModel))
+    }
+    case Failure(_) => Future.successful(BadRequest("Cannot parse the theModel id"))
+  }
+}
+
+/**
+  * validating the id passed in an argument
+  * and check if the json is valid by using the validate helper in the request body.
+  * 
+  * Thanks to the json serialization macro,
+  * the Scala object can be serialized implicitly from json and vise-versa.
+  * 
+  * @return
+  */
+def create():Action[JsValue] = Action.async(controllerComponents.parsers.json) { implicit request => {
+
+   request.body.validate[TheModel].fold(
+     _ => Future.successful(BadRequest("Cannot parse request body")),
+     theModel =>
+       theModelRepository.create(theModel).map {
+         _ => Created(Json.toJson(theModel))
+     }
+   )
+}}
+
+def update(
+            id: String):Action[JsValue]  = Action.async(controllerComponents.parsers.json) { implicit request => {
+  request.body.validate[TheModel].fold(
+    _ => Future.successful(BadRequest("Cannot parse request body")),
+    theModel =>{
+      val objectIdTryResult = BSONObjectID.parse(id)
+      objectIdTryResult match {
+        case Success(objectId) => theModelRepository.update(objectId, theModel).map {
+          result => Ok(Json.toJson(result.ok))
+        }
+        case Failure(_) => Future.successful(BadRequest("Cannot parse the theModel id"))
+      }
+    }
+  )
+}}
+
+def delete(id: String):Action[AnyContent]  = Action.async { implicit request => {
+  val objectIdTryResult = BSONObjectID.parse(id)
+  objectIdTryResult match {
+    case Success(objectId) => theModelRepository.delete(objectId).map {
+      _ => NoContent
+    }
+    case Failure(_) => Future.successful(BadRequest("Cannot parse the theModel id"))
+  }
+}
+}
+}
+
+/*
+without mongodb
 
 import javax.inject._
 import play.api.mvc._
@@ -15,89 +119,17 @@ class TheController @Inject() (cc: ControllerComponents)
 
   implicit val TheModelFormat = Json.format[TheModel]
 
+  // make a TheModel and show it in Json format
   def getAll = Action {
     val themodel = new TheModel(1, "name1", "descriptions of name 1")
     Ok(Json.toJson(themodel))
   }
 
+  // add 2 given numbers
   def add(num1: Int, num2: Int) =  Action {
     var result = num1 + num2
 	Ok("" + num1 + " + " + num2 + " = " + result + "")
   }
 }
 
-
-
-
-/*
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Logger
-import play.api.mvc.{AbstractController, ControllerComponents}
-import play.api.libs.json._
-
-import reactivemongo.api.Cursor
-
-import reactivemongo.api.bson.collection.BSONCollection
-
-import play.modules.reactivemongo.{
-  MongoController,
-  ReactiveMongoApi,
-  ReactiveMongoComponents
-}
-
-// to make sure JSON/BSON conversions are available
-import reactivemongo.play.json.compat._,
-json2bson.{toDocumentReader, toDocumentWriter}
-
-import models.{TheModel}
-
-/*
- * This controller uses case classes and their associated Reads/Writes to read or write JSON structures.
- */
-
-// Play's dependency injection mechanism to resolve instance of  ReactiveMongoApi which as an interface to MongoDB:
-class TheController @Inject() (
-    components: ControllerComponents,
-    val reactiveMongoApi: ReactiveMongoApi
-) extends AbstractController(components)
-    with MongoController
-    with ReactiveMongoComponents {
-
-  implicit def ec: ExecutionContext = components.executionContext
-
-  def collection: Future[BSONCollection] =
-    database.map(_.collection[BSONCollection]("thecollection"))
-
-  // Using case classes + JSON Writes and Reads
-  import models._
-  import models.JsonFormats._
-
-
-  def createFromJson = Action.async(parse.json) { request =>
-    /*
- * request.body is a JsValue.
- * There is an implicit Writes that turns this JsValue as a JsObject,
- * so you can call insert.one() with this JsValue.
- * (insert.one() takes a JsObject as parameter, or anything that can be
- * turned into a JsObject using a Writes.)
- */
-    request.body.validate[TheModel].map { themodel =>
-      // `themodel` is an instance of the case class `models.TheModel`
-      collection.flatMap(_.insert.one(themodel)).map { lastError =>
-        Logger(s"Successfully inserted with LastError: $lastError")
-        Created
-      }
-    }.getOrElse(Future.successful(BadRequest("invalid json")))
-  }
-
-
-
-  def getAll = Action {
-    val themodel = new TheModel(1, "name1", "descriptions of name 1")
-    Ok(themodel.toString())
-  }
-}
  */
