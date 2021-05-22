@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 import play.api.mvc._
-import repositories.TheModelRepository
+import repositories.TheRepository
 
 import scala.concurrent.ExecutionContext
 
@@ -14,96 +14,111 @@ import scala.concurrent.{ExecutionContext, Future}
 import models.TheModel
 import play.api.libs.json.JsValue
 
-/**
-  * create the endpoints to expose the actions for the theModels repository.
+/** create the endpoints to expose the actions for the theModels repository.
   *
   * @param executionContext
   * @param theModelRepository
   * @param controllerComponents
   */
 @Singleton
-class TheModelController @Inject()(
-                                 implicit executionContext: ExecutionContext,
-                                 val theModelRepository: TheModelRepository,
-                                 val controllerComponents: ControllerComponents)
-  extends BaseController {
+class TheController @Inject() (implicit
+    executionContext: ExecutionContext,
+    val theRepository: TheRepository,
+    val controllerComponents: ControllerComponents
+) extends BaseController {
   // actions:
 
-  /**
-	* the two endpoints responsible of reading data:
-	*
-	* this will return the theModel list
-	* 
-	* @return
-	*/
-  def findAll():Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-  theModelRepository.findAll().map {
-    theModels => Ok(Json.toJson(theModels))
+  /** the two endpoints responsible of reading data:
+    *
+    * this will return the theModel list
+    *
+    * @return
+    */
+  def findAll(): Action[AnyContent] = Action.async {
+    implicit request: Request[AnyContent] =>
+      theRepository.findAll().map { theModels =>
+        Ok(Json.toJson(theModels))
+      }
   }
-}
 
-/**
-  * this will parse the given id and return the associated theModel if it’s found.
-  *
-  * @param id
-  * @return
-  */
-def findOne(id:String):Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-  val objectIdTryResult = BSONObjectID.parse(id)
-  objectIdTryResult match {
-    case Success(objectId) => theModelRepository.findOne(objectId).map {
-      theModel => Ok(Json.toJson(theModel))
-    }
-    case Failure(_) => Future.successful(BadRequest("Cannot parse the theModel id"))
-  }
-}
-
-/**
-  * validating the id passed in an argument
-  * and check if the json is valid by using the validate helper in the request body.
-  * 
-  * Thanks to the json serialization macro,
-  * the Scala object can be serialized implicitly from json and vise-versa.
-  * 
-  * @return
-  */
-def create():Action[JsValue] = Action.async(controllerComponents.parsers.json) { implicit request => {
-
-   request.body.validate[TheModel].fold(
-     _ => Future.successful(BadRequest("Cannot parse request body")),
-     theModel =>
-       theModelRepository.create(theModel).map {
-         _ => Created(Json.toJson(theModel))
-     }
-   )
-}}
-
-def update(
-            id: String):Action[JsValue]  = Action.async(controllerComponents.parsers.json) { implicit request => {
-  request.body.validate[TheModel].fold(
-    _ => Future.successful(BadRequest("Cannot parse request body")),
-    theModel =>{
+  /** this will parse the given id and return the associated theModel if it’s found.
+    *
+    * @param id
+    * @return
+    */
+  def findOne(id: String): Action[AnyContent] = Action.async {
+    implicit request: Request[AnyContent] =>
       val objectIdTryResult = BSONObjectID.parse(id)
       objectIdTryResult match {
-        case Success(objectId) => theModelRepository.update(objectId, theModel).map {
-          result => Ok(Json.toJson(result.ok))
-        }
-        case Failure(_) => Future.successful(BadRequest("Cannot parse the theModel id"))
+        case Success(objectId) =>
+          theRepository.findOne(objectId).map { theModel =>
+            Ok(Json.toJson(theModel))
+          }
+        case Failure(_) =>
+          Future.successful(BadRequest("Cannot parse the theModel id"))
+      }
+  }
+
+  /** validating the id passed in an argument
+    * and check if the json is valid by using the validate helper in the request body.
+    *
+    * Thanks to the json serialization macro,
+    * the Scala object can be serialized implicitly from json and vise-versa.
+    *
+    * @return
+    */
+  def create(): Action[JsValue] =
+    Action.async(controllerComponents.parsers.json) { implicit request =>
+      {
+
+        request.body
+          .validate[TheModel]
+          .fold(
+            _ => Future.successful(BadRequest("Cannot parse request body")),
+            theModel =>
+              theRepository.create(theModel).map { _ =>
+                Created(Json.toJson(theModel))
+              }
+          )
       }
     }
-  )
-}}
 
-def delete(id: String):Action[AnyContent]  = Action.async { implicit request => {
-  val objectIdTryResult = BSONObjectID.parse(id)
-  objectIdTryResult match {
-    case Success(objectId) => theModelRepository.delete(objectId).map {
-      _ => NoContent
+  def update(id: String): Action[JsValue] =
+    Action.async(controllerComponents.parsers.json) { implicit request =>
+      {
+        request.body
+          .validate[TheModel]
+          .fold(
+            _ => Future.successful(BadRequest("Cannot parse request body")),
+            theModel => {
+              val objectIdTryResult = BSONObjectID.parse(id)
+              objectIdTryResult match {
+                case Success(objectId) =>
+                  theRepository.update(objectId, theModel).map { result =>
+                    Ok(Json.toJson(result.ok))
+                  }
+                case Failure(_) =>
+                  Future.successful(BadRequest("Cannot parse the theModel id"))
+              }
+            }
+          )
+      }
     }
-    case Failure(_) => Future.successful(BadRequest("Cannot parse the theModel id"))
+
+  def delete(id: String): Action[AnyContent] = Action.async {
+    implicit request =>
+      {
+        val objectIdTryResult = BSONObjectID.parse(id)
+        objectIdTryResult match {
+          case Success(objectId) =>
+            theRepository.delete(objectId).map { _ =>
+              NoContent
+            }
+          case Failure(_) =>
+            Future.successful(BadRequest("Cannot parse the theModel id"))
+        }
+      }
   }
-}
-}
 }
 
 /*

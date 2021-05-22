@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   // Default Dependencies:
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
   // Enable reactive mongo for Play 2.8
-  "org.reactivemongo" %% "play2-reactivemongo" % "1.0.4-play28",
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.20.13-play28",
   // Provide JSON serialization for reactive mongo
   "org.reactivemongo" %% "reactivemongo-play-json-compat" % "1.0.1-play28",
   // Provide BSON serialization for reactive mongo
