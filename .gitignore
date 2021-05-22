@@ -14,7 +14,7 @@ conf/application.conf
 
 # sbt
 bin/
-project/
+#project/
 target/
 build/
 
