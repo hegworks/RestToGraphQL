@@ -119,32 +119,9 @@ class TheController @Inject() (implicit
         }
       }
   }
-}
 
-/*
-without mongodb
-
-import javax.inject._
-import play.api.mvc._
-import play.api.libs.json._
-import models.{TheModel}
-
-class TheController @Inject() (cc: ControllerComponents)
-    extends AbstractController(cc) {
-
-  implicit val TheModelFormat = Json.format[TheModel]
-
-  // make a TheModel and show it in Json format
-  def getAll = Action {
-    val themodel = new TheModel(1, "name1", "descriptions of name 1")
-    Ok(Json.toJson(themodel))
-  }
-
-  // add 2 given numbers
   def add(num1: Int, num2: Int) =  Action {
     var result = num1 + num2
 	Ok("" + num1 + " + " + num2 + " = " + result + "")
   }
 }
-
- */

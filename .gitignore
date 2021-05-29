@@ -1,7 +1,6 @@
 #general
 *.class
 *.log
-conf/application.conf
 
 # bloop and metals
 .bloop
@@ -14,9 +13,11 @@ conf/application.conf
 
 # sbt
 bin/
+
 #project/
 target/
 build/
+null/
 
 # Play Framework
 /.idea

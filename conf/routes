@@ -6,13 +6,12 @@
 # An example controller showing a sample home page
 GET			/						controllers.AppController.index()
 
-# GET		/all					controllers.TheController.getAll
-# GET		/add/:num1/:num2		controllers.TheController.add(num1: Int, num2: Int)
-GET			/movies					controllers.TheController.findAll()
-GET			/movies/:id				controllers.TheController.findOne(id: String)
-POST		/movies					controllers.TheController.create()
-PUT			/movies/:id				controllers.TheController.update(id: String)
-DELETE		/movies/:id				controllers.TheController.delete(id: String)
+GET			/themodels				controllers.TheController.findAll()
+GET			/themodels/:id			controllers.TheController.findOne(id: String)
+POST		/themodels				controllers.TheController.create()
+PUT			/themodels/:id			controllers.TheController.update(id: String)
+DELETE		/themodels/:id			controllers.TheController.delete(id: String)
+GET			/add/:num1/:num2		controllers.TheController.add(num1: Int, num2: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

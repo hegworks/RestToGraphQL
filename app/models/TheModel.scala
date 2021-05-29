@@ -32,7 +32,7 @@ object TheModel{
   implicit object TheModelBSONReader extends BSONDocumentReader[TheModel] {
     def read(doc: BSONDocument): TheModel = {
       TheModel(
-        doc.getAs[BSONObjectID]("id"),
+        doc.getAs[BSONObjectID]("_id"),
         doc.getAs[String]("name").get,
         doc.getAs[String]("description").get)
     }
@@ -41,7 +41,7 @@ object TheModel{
   implicit object TheModelBSONWriter extends BSONDocumentWriter[TheModel] {
     def write(theModel: TheModel): BSONDocument = {
       BSONDocument(
-        "id" -> theModel.id,
+        "ـid" -> theModel.id,
         "name" -> theModel.name,
         "description" -> theModel.description
 
