@@ -1,15 +1,16 @@
 package repositories
 
 import javax.inject._
-import reactivemongo.api.bson.collection.BSONCollection
 import play.modules.reactivemongo.ReactiveMongoApi
 import scala.concurrent.{ExecutionContext, Future}
 
-import models.TheModel
 import reactivemongo.api.{Cursor, ReadPreference}
+import reactivemongo.api.commands.WriteResult
+import reactivemongo.api.bson.compat._
+import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 
-import reactivemongo.api.commands.WriteResult
+import models.TheModel
 
 /** injects the execution context and the reactive mongo api.
   * Also, it contains a helpers function that returns a FutureofBSONCollection.

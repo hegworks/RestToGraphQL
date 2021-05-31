@@ -1,24 +1,28 @@
 package models
 
 import play.api.libs.json.{Format, Json}
-import reactivemongo.play.json._
-import reactivemongo.bson.BSONObjectID
-import reactivemongo.bson._
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 
+import reactivemongo.play.json._
+import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson._
+
 /**
-  * we have a basic case class that contains the definition of
-  * a theModel and a companion object that contains the implicit JSON/BJSON serializers.
+  * a basic case class that contains the definition of
+  * a theModel and a companion object that contains
+  * the implicit JSON/BJSON serializers.
   *
   * @param id
   * @param name
   * @param description
+  * @param number
   */
 case class TheModel(
                   id:Option[BSONObjectID],
                   name:String,
-                  description:String
+                  description:String,
+				  number:Int
                 )
 
 /**
@@ -34,7 +38,8 @@ object TheModel{
       TheModel(
         doc.getAs[BSONObjectID]("_id"),
         doc.getAs[String]("name").get,
-        doc.getAs[String]("description").get)
+        doc.getAs[String]("description").get,
+		doc.getAs[Int]("number").get)
     }
   }
 
@@ -43,8 +48,8 @@ object TheModel{
       BSONDocument(
         "ـid" -> theModel.id,
         "name" -> theModel.name,
-        "description" -> theModel.description
-
+        "description" -> theModel.description,
+		"number" -> theModel.number
       )
     }
   }

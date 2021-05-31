@@ -1,23 +1,22 @@
 package controllers
 
 import javax.inject._
-import play.api.mvc._
-import repositories.TheRepository
 
-import scala.concurrent.ExecutionContext
+import play.api.mvc._
+import play.api.libs.json.{JsValue, Json, __}
+
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 import reactivemongo.bson.BSONObjectID
-import play.api.libs.json.{Json, __}
-import scala.util.{Failure, Success}
-import scala.concurrent.{ExecutionContext, Future}
 
 import models.TheModel
-import play.api.libs.json.JsValue
+import repositories.TheRepository
 
 /** create the endpoints to expose the actions for the theModels repository.
   *
   * @param executionContext
-  * @param theModelRepository
+  * @param theRepository
   * @param controllerComponents
   */
 @Singleton
