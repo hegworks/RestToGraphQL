@@ -45,16 +45,26 @@ class TheController @Inject() (implicit
     * @param id
     * @return
     */
-  def findOne(id: String): Action[AnyContent] = Action.async {
-    implicit request: Request[AnyContent] =>
-      val objectIdTryResult = BSONObjectID.parse(id)
-      objectIdTryResult match {
+	def findOne(id: String): Action[AnyContent] = Action.async {
+		implicit request: Request[AnyContent] =>
+		val objectIdTryResult = BSONObjectID.parse(id)
+		objectIdTryResult match {
+			case Success(objectId) =>
+			theRepository.findOne(objectId).map { theModel =>
+				Ok(Json.toJson(theModel))
+			}
+			case Failure(_) =>
+			Future.successful(BadRequest("Cannot parse the theModel id"))
+		}
+	}
+
+
+  def gqlFindOne(id: String): Future[Option[TheModel]] = {
+	  val objectIdTryResult = BSONObjectID.parse(id)
+	  objectIdTryResult match {
         case Success(objectId) =>
-          theRepository.findOne(objectId).map { theModel =>
-            Ok(Json.toJson(theModel))
-          }
-        case Failure(_) =>
-          Future.successful(BadRequest("Cannot parse the theModel id"))
+          theRepository.findOne(objectId)
+		  //case Failure(_) => //TODO
       }
   }
 

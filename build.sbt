@@ -21,7 +21,9 @@ libraryDependencies ++= Seq(
   // Provide JSON serialization for Joda-Time
   "com.typesafe.play" %% "play-json-joda" % "2.7.4",
   // Scala GraphQL implementation named Sangria
-  "org.sangria-graphql" %% "sangria" % "2.0.0"
+  "org.sangria-graphql" %% "sangria" % "2.0.0",
+  // JSON implementation for Sangria
+  "org.sangria-graphql" %% "sangria-play-json" % "2.0.1",
 )
 
 // Adds additional packages into Twirl
