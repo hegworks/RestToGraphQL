@@ -16,7 +16,7 @@ class TheModelSchema @Inject() (theController: TheController){
 		name = "TheModel",
 		description = "this is a theModel",
 		fields[Unit,TheModel](
-			Field("_id", StringType, resolve = _.value._id.toString()),
+			Field("_id", StringType, resolve = _.value._id.toString().slice(19,43)),
 			Field("name", StringType, resolve = _.value.name),
 			Field("description", StringType, resolve = _.value.description),
 			Field("number", IntType, resolve = _.value.number)
