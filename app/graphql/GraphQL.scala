@@ -18,6 +18,14 @@ class GraphQL @Inject() (theModelSchema: TheModelSchema){
 			fields(
 				theModelSchema.Queries: _*
 			)
+		),
+
+		mutation = Some(
+			ObjectType("Mutation",
+				fields(
+					theModelSchema.Mutations: _*
+				)
+			)
 		)
 	)
 }

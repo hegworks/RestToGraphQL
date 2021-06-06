@@ -46,4 +46,22 @@ class TheModelSchema @Inject() (theController: TheController){
 		resolve = _ => theController.gqlFindAll
 		)
 	)
+
+	val Mutations: List[Field[Unit, Unit]] = List(
+		Field(
+			name = "addTheModel",
+			fieldType = TheModelType,
+			arguments = List(
+				Argument("name", StringType),
+				Argument("description", StringType),
+				Argument("number", IntType)
+		),
+		resolve = sangriaContext =>
+			theController.gqlCreate(
+				sangriaContext.args.arg[String]("name"),
+				sangriaContext.args.arg[String]("description"),
+				sangriaContext.args.arg[Int]("number")
+			)
+		)
+	)
 }

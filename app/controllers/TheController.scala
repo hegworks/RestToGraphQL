@@ -70,7 +70,17 @@ class TheController @Inject() (implicit
 
     def gqlFindAll: Future[Seq[TheModel]] = {
       theRepository.findAll()
-  }
+	}
+
+    def gqlCreate(name:String, description:String, number:Int): TheModel = {
+		val theModel = new TheModel(
+			Some(BSONObjectID.generate()),
+			name,
+			description,
+			number)
+		theRepository.create(theModel)
+		theModel
+    }
 
   /** validating the id passed in an argument
     * and check if the json is valid by using the validate helper in the request body.
