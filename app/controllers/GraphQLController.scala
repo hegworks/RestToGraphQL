@@ -57,7 +57,7 @@ class GraphQLController @Inject()(graphQL: GraphQL,
           case objectBody@JsObject(_) => extract(objectBody)
           case otherType =>
             throw new Error {
-              s"/graphql endpoint does not support request body of type [${otherType.getClass.getSimpleName}]"
+              s"/gql endpoint does not support request body of type [${otherType.getClass.getSimpleName}]"
             }
         }
       }

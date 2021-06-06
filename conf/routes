@@ -16,6 +16,7 @@ GET			/add/:num1/:num2		controllers.TheController.add(num1: Int, num2: Int)
 # GraphQL IDE
 GET			/giql					controllers.GraphQLController.graphiql
 # GraphQL Controller which accepts requests
++ nocsrf
 POST		/gql					controllers.GraphQLController.graphqlBody
 
 # Map static resources from the /public folder to the /assets URL path
