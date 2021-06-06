@@ -68,6 +68,10 @@ class TheController @Inject() (implicit
       }
   }
 
+    def gqlFindAll: Future[Seq[TheModel]] = {
+      theRepository.findAll()
+  }
+
   /** validating the id passed in an argument
     * and check if the json is valid by using the validate helper in the request body.
     *

@@ -38,6 +38,12 @@ class TheModelSchema @Inject() (theController: TheController){
 		resolve =
 			sangriaContext =>
 			theController.gqlFindOne(sangriaContext.args.arg[String]("_id"))
+		),
+	Field(
+		name = "findAll",
+		fieldType = ListType(TheModelType),
+		description = Some("Returns all themodels"),
+		resolve = _ => theController.gqlFindAll
 		)
 	)
 }
