@@ -64,7 +64,13 @@ class TheController @Inject() (implicit
 	  objectIdTryResult match {
         case Success(objectId) =>
           theRepository.findOne(objectId)
-		  //case Failure(_) => //TODO
+		case Failure(_) =>  println("ERROR: Cannot parse the theModel id")
+		Future(Some(new TheModel(
+			Some(BSONObjectID.generate()),
+			"ERROR: Cannot parse the theModel id",
+			"ERROR: Cannot parse the theModel id",
+			-1)))
+
       }
   }
 
