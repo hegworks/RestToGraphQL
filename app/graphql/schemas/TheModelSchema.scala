@@ -40,6 +40,20 @@ class TheModelSchema @Inject() (theController: TheController){
 			theController.gqlFindOne(sangriaContext.args.arg[String]("_id"))
 		),
 	Field(
+	name = "addNumbers",
+	fieldType = IntType,
+	description = Some("Returns sum of 2 given numbers"),
+	arguments = List(
+		Argument("num1", IntType),
+		Argument("num2", IntType)
+	),
+	resolve =
+		sangriaContext =>
+		theController.gqlAdd(
+			sangriaContext.args.arg[Int]("num1"),
+			sangriaContext.args.arg[Int]("num2"))
+	),
+	Field(
 		name = "findAll",
 		fieldType = ListType(TheModelType),
 		description = Some("Returns all themodels"),

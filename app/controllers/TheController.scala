@@ -118,6 +118,10 @@ class TheController @Inject() (implicit
 		}
   }
 
+  def gqlAdd(num1: Int, num2: Int): Int = {
+    num1 + num2
+  }
+
   /** validating the id passed in an argument
     * and check if the json is valid by using the validate helper in the request body.
     *
