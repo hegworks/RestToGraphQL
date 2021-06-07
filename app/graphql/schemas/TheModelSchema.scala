@@ -79,6 +79,18 @@ class TheModelSchema @Inject() (theController: TheController){
 				sangriaContext.args.arg[String]("description"),
 				sangriaContext.args.arg[Int]("number")
 			)
+		),
+		Field(
+			name = "deleteTheModel",
+			fieldType = BooleanType,
+			arguments = List(
+				Argument("_id", StringType)
+		),
+		resolve = sangriaContext =>
+			theController.gqlDelete(
+				sangriaContext.args.arg[String]("_id")
+			)
 		)
+
 	)
 }
