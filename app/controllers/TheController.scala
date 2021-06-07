@@ -106,6 +106,18 @@ class TheController @Inject() (implicit
 		}
     }
 
+	def gqlDelete(id: String): Boolean = {
+        val objectIdTryResult = BSONObjectID.parse(id)
+		objectIdTryResult match {
+			case Success(objectId) =>
+				theRepository.delete(objectId)
+				true
+			case Failure(_) =>
+				println("ERROR: Cannot parse the theModel id")
+				false
+		}
+  }
+
   /** validating the id passed in an argument
     * and check if the json is valid by using the validate helper in the request body.
     *
