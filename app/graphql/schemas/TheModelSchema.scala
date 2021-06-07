@@ -62,6 +62,23 @@ class TheModelSchema @Inject() (theController: TheController){
 				sangriaContext.args.arg[String]("description"),
 				sangriaContext.args.arg[Int]("number")
 			)
+		),
+		Field(
+			name = "updateTheModel",
+			fieldType = TheModelType,
+			arguments = List(
+				Argument("_id", StringType),
+				Argument("name", StringType),
+				Argument("description", StringType),
+				Argument("number", IntType)
+		),
+		resolve = sangriaContext =>
+			theController.gqlUpdate(
+				sangriaContext.args.arg[String]("_id"),
+				sangriaContext.args.arg[String]("name"),
+				sangriaContext.args.arg[String]("description"),
+				sangriaContext.args.arg[Int]("number")
+			)
 		)
 	)
 }

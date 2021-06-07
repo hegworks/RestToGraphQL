@@ -88,6 +88,24 @@ class TheController @Inject() (implicit
 		theModel
     }
 
+	def gqlUpdate(id: String, name:String, description:String, number:Int): Future[TheModel] = {
+		val objectIdTryResult = BSONObjectID.parse(id)
+		objectIdTryResult match {
+			case Success(objectId) =>
+				val updatedTheModel = new TheModel(Some(objectId), name, description, number)
+				theRepository.update(objectId,updatedTheModel)
+				Future(updatedTheModel)
+			case Failure(_) =>
+				println("ERROR: Cannot parse the theModel id")
+				Future(new TheModel(
+					Some(BSONObjectID.generate()),
+					"ERROR: Cannot parse the theModel id",
+					"ERROR: Cannot parse the theModel id",
+					-1)
+				)
+		}
+    }
+
   /** validating the id passed in an argument
     * and check if the json is valid by using the validate helper in the request body.
     *
